@@ -14,6 +14,19 @@ export class UsuariosService {
         private readonly rolService: RolService
     ) {}
 
+    async findByEmail(email: string, includePassword = false): Promise<UsuarioEntity | null>{
+        if(includePassword) {
+            return await this.usuariosRepository.createQueryBuilder('usuario')
+            .addSelect('usuario.password')
+            .leftJoinAndSelect('usuario.rol', 'rol')
+            .where('usuario.email = :email', {email})
+            .getOne()
+        }
+        return await this.usuariosRepository.findOne({
+            where: {email}
+        });
+    }
+
     async create(createUsuarioDto: CreateUsuarioDto) {
         const userExists = await this.usuariosRepository.findOne({ where: { email: createUsuarioDto.email } });
         if (userExists) {
