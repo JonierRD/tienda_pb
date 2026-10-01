@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UsuarioEntity } from 'src/usuarios/entities/usuario.entity';
 
 @Injectable()
 export class AuthService {
@@ -63,6 +64,14 @@ export class AuthService {
         return {
             message: "Inicio de Sesion exitoso",
             access_token: token,
+        }
+    }
+
+    //El usuario ya viene cargado por la JwtStrategy, aqui solo se formatea
+    perfil(usuario: UsuarioEntity) {
+        return {
+            message: 'Perfil obtenido exitosamente',
+            user: usuario,
         }
     }
 }
